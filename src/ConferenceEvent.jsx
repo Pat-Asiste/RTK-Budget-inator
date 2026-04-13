@@ -1,3 +1,5 @@
+//COMPONENTE principal  --  "pseudo HOC" ----------------------------------------------------------------
+
 import React, { useState } from "react";
 import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
@@ -15,11 +17,11 @@ const ConferenceEvent = () => {
   const dispatch = useDispatch();
   const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
 
-
-  const handleToggleItems = () => {
+//"dead code"-------------------------------
+/*   const handleToggleItems = () => {
     console.log("handleToggleItems called");
     setShowItems(!showItems);
-  };
+  }; */
 
   const handleAddToCart = (index) => {
     if (venueItems[index].quantity >= 10) {
@@ -96,13 +98,13 @@ const ConferenceEvent = () => {
               {items.map((item, index) => (
                 <tr key={index}>
                   <td>{item.name}</td>
-                  <td>{item.cost}</td>
+                  <td>S/. {item.cost}</td>
                   <td>{item.type === "meals" || item.numberOfPeople
                     ? `Para ${numberOfPeople} personas`
                     : item.quantity}</td>
                   <td>{item.type === "meals" || item.numberOfPeople
-                    ? `${item.cost * numberOfPeople}`
-                    : `${item.cost * item.quantity}`}</td>
+                    ? `S/. ${item.cost * numberOfPeople}`
+                    : `S/. ${item.cost * item.quantity}`}</td>
                 </tr>
               ))}
             </tbody>
@@ -130,7 +132,7 @@ const ConferenceEvent = () => {
   const avTotalCost = calculateTotalCost("av");
   const mealsTotalCost = calculateTotalCost("meals");
 
-  const totalCosts = {
+  const totalCosts = {                                //Este se pasará como una prop de <TotalCost /> COMPONENT
     venue: venueTotalCost,
     av: avTotalCost,
     meals: mealsTotalCost,
@@ -138,8 +140,8 @@ const ConferenceEvent = () => {
 
   const navigateToProducts = (idType) => {
     if (idType == '#venue' || idType == '#addons' || idType == '#meals') {
-      if (showItems) { // Check if showItems is false
-        setShowItems(!showItems); // Toggle showItems to true only if it's currently false
+      if (showItems) {            // Check if showItems is true
+        setShowItems(!showItems); // Hide <TotalCost />
       }
     }
   }
@@ -284,9 +286,9 @@ const ConferenceEvent = () => {
                 <div className="total_cost">Total Cost: S/.{mealsTotalCost}</div>
               </div>
             </div>
-          ) : (   /* Este parentesis borra las 3 secciones: venue, add-ons y meals. ------------- */
+          ) : (   /* Este parentesis/ "const showItems" borra las 3 secciones: venue, add-ons y meals. ------------- */
             <div className="total_amount_detail">
-              <TotalCost totalCosts={totalCosts} handleClick={handleToggleItems} ItemsDisplay={() => <ItemsDisplay items={items} />} />
+              <TotalCost totalCosts={totalCosts} /* handleClick={handleToggleItems} */ ItemsDisplay={() => <ItemsDisplay items={items} />} />
             </div>
           )
         }
